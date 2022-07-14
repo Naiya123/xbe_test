@@ -13,7 +13,8 @@ namespace :db_listner do
       end
 
       listener.on_notify do |payload|
-        puts JSON.parse(payload).to_s
+        parsed_payload = JSON.parse(payload)
+        UpdateInvoiceJob.perform_async(parsed_payload.dig('record', 'invoice_id'))
         puts 'here in notify'
       end
 
